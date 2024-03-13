@@ -1,0 +1,8 @@
+// its a basic Hospital Environment Project.
+//where different types of doctor will use different port number
+//user will interect with doctor using http express request
+
+//Get -> user can check how many kidneys they have and theri healthy condition.
+//post -> user can  add a new kidney
+//put -> user can replace a kidney and make it healthy
+//delete -> user can remove a kidney
