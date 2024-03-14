@@ -5,6 +5,9 @@ const express = require("express");
 const bodyParser = require("body-parser"); //for post its required
 const app = express();
 
+app.use(express.json());
+//without it it can;t read json data from request
+
 var patients = [
   {
     name: "john",
@@ -38,8 +41,19 @@ app.get("/", function (req, res) {
     patientName,
     totalNumberOfKidney,
     totalHealthyKidney,
-    numberOfKidney,
+    //numberOfKidney,
   });
+});
+
+app.post("/post", function (req, res) {
+  const isHealthy = req.body.isHealthy;
+  patients[0].kidneys.push({
+    healthy: isHealthy,
+  });
+  res.send("New Healthy Kidney Added!!!");
+  //   res.json({
+  //     msg: "New Healthy Kidney Added on patient" + patients[0].name,
+  //   });
 });
 
 app.listen(3000, function () {
