@@ -55,7 +55,25 @@ app.post("/post", function (req, res) {
   //     msg: "New Healthy Kidney Added on patient" + patients[0].name,
   //   });
 });
+app.put("/post", function (req, res) {
+  for (let i = 0; i < patients[0].kidneys.length; i++) {
+    patients[0].kidneys[i].healthy = true;
+  }
+  res.json({});
+});
 
+app.delete("/delete", function (req, res) {
+  const newKidneyArray = [];
+  for (let i = 0; i < patients[0].kidneys.length; i++) {
+    if (patients[0].kidneys[i].healthy == true) {
+      newKidneyArray.push({
+        healthy: true,
+      });
+    }
+  }
+  patients[0].kidneys = newKidneyArray;
+  res.json({});
+});
 app.listen(3000, function () {
   //it will show in terminal console
   console.log(`Example app listening on port 3000`);
