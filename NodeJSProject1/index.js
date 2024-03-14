@@ -46,35 +46,60 @@ app.get("/", function (req, res) {
 });
 
 app.post("/post", function (req, res) {
-  const isHealthy = req.body.isHealthy;
-  patients[0].kidneys.push({
-    healthy: isHealthy,
-  });
-  res.send("New Healthy Kidney Added!!!");
-  //   res.json({
-  //     msg: "New Healthy Kidney Added on patient" + patients[0].name,
-  //   });
+  if (patients[0].kidneys.length < 2) {
+    const isHealthy = req.body.isHealthy;
+    if (isHealthy) {
+      patients[0].kidneys.push({
+        healthy: isHealthy,
+      });
+      res.send("New Healthy Kidney Added!!!");
+      //   res.json({
+      //     msg: "New Healthy Kidney Added on patient" + patients[0].name,
+      //   });
+    } else {
+      res.status(411).send("You can't ADD Unhealthy Kidney,Give TRUE Value");
+    }
+  } else {
+    res.status(411).send("You already have two kidneys,You can't add Kidney");
+  }
 });
 app.put("/post", function (req, res) {
-  for (let i = 0; i < patients[0].kidneys.length; i++) {
-    patients[0].kidneys[i].healthy = true;
+  if (!checkingForUnhealtyKidney) {
+    for (let i = 0; i < patients[0].kidneys.length; i++) {
+      patients[0].kidneys[i].healthy = true;
+    }
+    res.json({});
+  } else {
+    res.status(411).send("You Have not any Unhealthy Kidney to REPLACE");
   }
-  res.json({});
 });
 
 app.delete("/delete", function (req, res) {
-  const newKidneyArray = [];
-  for (let i = 0; i < patients[0].kidneys.length; i++) {
-    if (patients[0].kidneys[i].healthy == true) {
-      newKidneyArray.push({
-        healthy: true,
-      });
+  if (!checkingForUnhealtyKidney) {
+    const newKidneyArray = [];
+    for (let i = 0; i < patients[0].kidneys.length; i++) {
+      if (patients[0].kidneys[i].healthy == true) {
+        newKidneyArray.push({
+          healthy: true,
+        });
+      }
     }
+    patients[0].kidneys = newKidneyArray;
+    res.json({});
+  } else {
+    res.status(411).send("You Have not any Unhealthy Kidney to REMOVE");
   }
-  patients[0].kidneys = newKidneyArray;
-  res.json({});
 });
 app.listen(3000, function () {
   //it will show in terminal console
   console.log(`Example app listening on port 3000`);
 });
+function checkingForUnhealtyKidney() {
+  const flag = true;
+  for (let i = 0; i < patients[0].kidneys.length; i++) {
+    if (patients[0].kidneys[i].healthy == false) {
+      flag = false;
+    }
+  }
+  return flag;
+}
