@@ -8,6 +8,7 @@ const app = express();
 app.use(express.json());
 //without it it can;t read json data from request
 
+//local database
 var patients = [
   {
     name: "john",
@@ -22,7 +23,22 @@ var patients = [
   },
 ];
 
-app.get("/", function (req, res) {
+//middlewares
+function authenticationCheck(req, res, next) {
+  const username = req.headers.username;
+  const password = req.headers.password;
+  if (username != "sumona" && password != "123") {
+    res.status(400).send("Wrong Username or Password");
+  } else {
+    next();
+  }
+  //its used for pre-checks
+  //if positve result comes,then only next function will call
+  //either it will return error status
+  //here next() is another method.That will takes the control to final function
+}
+
+app.get("/", authenticationCheck, function (req, res) {
   const numberOfKidney = patients[0].kidneys;
   const patientName = patients[0].name;
   console.log("name---" + patientName);
