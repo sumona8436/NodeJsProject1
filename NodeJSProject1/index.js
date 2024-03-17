@@ -2,11 +2,25 @@
 //npm install -y
 //npm install express
 const express = require("express");
+const zod = require("zod"); //for input verification
 const bodyParser = require("body-parser"); //for post its required
 const app = express();
 
-app.use(express.json());
 //without it it can;t read json data from request
+app.use(express.json());
+
+//its a schema type
+const z = zod.array(zod.number());
+//like,if you do like this it will only check that its string or not
+// const mySchema = z.string();
+
+// // parsing
+// mySchema.parse("tuna"); // => "tuna"
+// mySchema.parse(12); // => throws ZodError
+
+// // "safe" parsing (doesn't throw error if validation fails)
+// mySchema.safeParse("tuna"); // => { success: true; data: "tuna" }
+// mySchema.safeParse(12); // => { success: false; error: ZodError }
 
 //local database
 var patients = [
@@ -105,6 +119,14 @@ app.delete("/delete", function (req, res) {
   } else {
     res.status(411).send("You Have not any Unhealthy Kidney to REMOVE");
   }
+});
+
+//
+//global catches
+//its a middleware that helps to detect error,have four argument
+app.use((error, req, res, next) => {
+  // console.log(error); //print error for debugging
+  res.status(500).send("An Internal Server error occured!!!!1");
 });
 app.listen(3000, function () {
   //it will show in terminal console
